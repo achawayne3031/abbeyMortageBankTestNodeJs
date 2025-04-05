@@ -24,6 +24,7 @@
     "typescript": "^5.8.2"
   },
   "dependencies": {
+    "abbeymortagebanktestnodejs": "file:",
     "body-parser": "1.20",
     "cors": "2.8",
     "dotenv": "16.4",

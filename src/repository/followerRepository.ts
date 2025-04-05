@@ -1,0 +1,31 @@
+const MysqlDB = require("../database/MysqlDB");
+import { Follower } from "../entity/Follower";
+
+export const FollowerRepository = MysqlDB.getRepository(Follower).extend({
+  async unFollow(userId: number, followingId: number) {
+    return this.createQueryBuilder("follower")
+      .delete()
+      .from(Follower)
+      .where("follower.userId = :userId", { userId })
+      .andWhere("follower.followerId = :followingId", { followingId })
+      .execute();
+  },
+
+  async findById(id: number) {
+    return await this.createQueryBuilder("follower")
+      .where("follower.id = :id", { id: id })
+      .getOne();
+  },
+
+  async checkFollowedUser(userId: number, followerId: number) {
+    return await this.createQueryBuilder("follower")
+      .where("follower.user = :userId", { userId })
+      .andWhere("follower.follower = :followerId", { followerId })
+      .getOne();
+  },
+
+  followers() {
+    let followers = this.createQueryBuilder("follower").getMany();
+    return followers;
+  },
+});

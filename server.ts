@@ -3,7 +3,9 @@ import cors from "cors";
 const bodyParser = require("body-parser");
 const authRouter = require("./src/router/authRouter");
 const userRouter = require("./src/router/userRouter");
-
+const followerRouter = require("./src/router/followerRouter");
+const friendRouter = require("./src/router/friendRouter");
+const peerRouter = require("./src/router/peerRouter");
 const MysqlDB = require("./src/database/MysqlDB");
 
 const app = express();
@@ -25,6 +27,15 @@ app.use("/api/auth", authRouter);
 
 ///// Users //////
 app.use("/api/users", userRouter);
+
+///// Follower //////
+app.use("/api/follower", followerRouter);
+
+///// Friend //////
+app.use("/api/friend", friendRouter);
+
+///// Peer //////
+app.use("/api/peer", peerRouter);
 
 app.get("/", (req, res) => {
   res.send("Hello World!");

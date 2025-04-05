@@ -10,6 +10,9 @@ import {
   Relation,
   UpdateDateColumn,
 } from "typeorm";
+import { Follower } from "./Follower";
+import { Friend } from "./Friend";
+import { Peer } from "./Peer";
 
 @Entity({ name: "users" })
 export class User {
@@ -37,8 +40,12 @@ export class User {
   @UpdateDateColumn()
   updated_at!: Date;
 
-  toJSON() {
-    const { password, ...userWithoutPassword } = this; // Destructure to exclude password
-    return userWithoutPassword; // Return the object without the password
-  }
+  @OneToMany(() => Follower, (follower) => follower.user)
+  followers!: Follower[];
+
+  @OneToMany(() => Friend, (friend) => friend.user)
+  friends!: Friend[];
+
+  @OneToMany(() => Peer, (peer) => peer.user)
+  peers!: Peer[];
 }

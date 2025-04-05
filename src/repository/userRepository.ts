@@ -2,6 +2,12 @@ const MysqlDB = require("../database/MysqlDB");
 import { User } from "../entity/User";
 
 export const UserRepository = MysqlDB.getRepository(User).extend({
+  async findById(id: number) {
+    return await this.createQueryBuilder("users")
+      .where("users.id = :id", { id: id })
+      .getOne();
+  },
+
   users() {
     let users = this.createQueryBuilder("users").getMany();
     return users;
