@@ -38,7 +38,7 @@ const AuthController = {
 
         return res
           .status(200)
-          .json(new CustomResponse("User created", 200, user, token));
+          .json(new CustomResponse("Login successful", 200, user, token));
       } else {
         throw new CustomResponse("Invalid login credentials", 400, [], "");
       }

@@ -33,6 +33,15 @@ const PeerController = {
 
       const { id } = tokenData;
 
+      if (parseInt(id) == parseInt(peerId)) {
+        throw new CustomResponse(
+          "Not allowed, You cant add yourself as a peer",
+          404,
+          [],
+          ""
+        );
+      }
+
       let userData;
       userData = await UserRepository.findById(parseInt(id));
 

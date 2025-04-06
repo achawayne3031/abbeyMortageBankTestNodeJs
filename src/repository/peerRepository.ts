@@ -2,6 +2,13 @@ const MysqlDB = require("../database/MysqlDB");
 import { Peer } from "../entity/Peer";
 
 export const PeerRepository = MysqlDB.getRepository(Peer).extend({
+  async userPeers(user: number) {
+    return await this.createQueryBuilder("peer")
+      .where("peer.user = :user", { user })
+      .leftJoinAndSelect("peer.peer", "users")
+      .getMany();
+  },
+
   async removePeer(userId: number, peerId: number) {
     return this.createQueryBuilder("peer")
       .delete()

@@ -33,6 +33,15 @@ const FriendController = {
 
       const { id } = tokenData;
 
+      if (parseInt(id) == parseInt(userId)) {
+        throw new CustomResponse(
+          "Not allowed, You cant friend yourself",
+          404,
+          [],
+          ""
+        );
+      }
+
       let userData;
       userData = await UserRepository.findById(parseInt(id));
 
@@ -48,11 +57,11 @@ const FriendController = {
       }
 
       let checkFriend = await FriendRepository.checkFriendUser(
-        parseInt(userId),
-        parseInt(id)
+        parseInt(id),
+        parseInt(userId)
       );
 
-      if (checkFriend == null) {
+      if (checkFriend != null) {
         throw new CustomResponse("User already your friend", 400, [], "");
       }
 

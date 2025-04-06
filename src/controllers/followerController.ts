@@ -33,6 +33,15 @@ const FollowerController = {
 
       const { id } = tokenData;
 
+      if (parseInt(id) == parseInt(userId)) {
+        throw new CustomResponse(
+          "Not allowed, You cant follow yourself",
+          404,
+          [],
+          ""
+        );
+      }
+
       let followerData;
       followerData = await UserRepository.findById(parseInt(id));
 

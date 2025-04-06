@@ -3,6 +3,8 @@ import {
   CreateDateColumn,
   Entity,
   JoinColumn,
+  JoinTable,
+  ManyToMany,
   ManyToOne,
   OneToMany,
   OneToOne,
@@ -42,6 +44,13 @@ export class User {
 
   @OneToMany(() => Follower, (follower) => follower.user)
   followers!: Follower[];
+
+  // @ManyToMany(() => User, (user) => user.following)
+  // @JoinTable()
+  // followers!: User[];
+
+  // @ManyToMany(() => User, (user) => user.followers)
+  // following!: User[];
 
   @OneToMany(() => Friend, (friend) => friend.user)
   friends!: Friend[];

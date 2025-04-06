@@ -2,14 +2,23 @@ const passwordHash = require("password-hash");
 import { Request, Response } from "express";
 import { CustomResponse } from "../utils/response";
 import { UserRepository } from "../repository/userRepository";
+import { getToken } from "../utils/token";
+import { FriendRepository } from "../repository/friendRepository";
+import { PeerRepository } from "../repository/peerRepository";
+import { FollowerRepository } from "../repository/followerRepository";
 
 const UserController = {
   users: async (req: Request, res: Response) => {
     try {
-      let users = await UserRepository.users();
+      const token = req.header("Authorization");
+      let tokenData = getToken(token);
 
-      //   const userRepository = getRepository(User);
-      //   const users = await userRepository.find();
+      if (tokenData == 0) {
+        throw new CustomResponse("Invalid token", 400, [], "");
+      }
+
+      const { id } = tokenData;
+      let users = await UserRepository.usersEx(parseInt(id));
 
       return res
         .status(200)
@@ -19,16 +28,38 @@ const UserController = {
     }
   },
 
-  followers: async (req: Request, res: Response) => {
+  profile: async (req: Request, res: Response) => {
     try {
-      let users = await UserRepository.users();
+      const token = req.header("Authorization");
+      let tokenData = getToken(token);
+      const { peerId } = req.body;
 
-      //   const userRepository = getRepository(User);
-      //   const users = await userRepository.find();
+      if (tokenData == 0) {
+        throw new CustomResponse("Invalid token", 400, [], "");
+      }
+
+      const { id } = tokenData;
+
+      let userData = await UserRepository.findById(parseInt(id));
+      let friendsData = await FriendRepository.userFriends(parseInt(id));
+      let peerData = await PeerRepository.userPeers(parseInt(id));
+      let followingData = await FollowerRepository.userFollowing(parseInt(id));
+
+      let followerData = await FollowerRepository.userFollowers(parseInt(id));
+
+      let resData = {
+        profile: userData,
+        followers: followerData,
+        following: followingData,
+        peer: peerData,
+        friends: friendsData,
+      };
+
+      // let users = await UserRepository.users();
 
       return res
         .status(200)
-        .json(new CustomResponse("user followers", 200, users, ""));
+        .json(new CustomResponse("user profile", 200, resData, ""));
     } catch (e: any) {
       return res.status(e.statusCode).json(e);
     }
